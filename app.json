@@ -1,0 +1,52 @@
+{
+    "name": "Alpha File Share Bot",
+    "description": "A Telegram bot for secure file sharing with admin-only upload capabilities",
+    "keywords": [
+        "telegram",
+        "file",
+        "sharing",
+        "bot",
+        "pyrogram"
+    ],
+    "repository": "https://github.com/utkarshdubey2008/AlphaShareBot",
+    "website": "https://t.me/Thealphabotz",
+    "success_url": "https://t.me/adarsh2626",
+    "stack": "heroku-22",
+    "env": {
+        "BOT_TOKEN": {
+            "description": "Your Telegram Bot Token from @BotFather",
+            "required": true
+        },
+        "API_ID": {
+            "description": "Your API_ID from my.telegram.org",
+            "required": true
+        },
+        "API_HASH": {
+            "description": "Your API_HASH from my.telegram.org",
+            "required": true
+        },
+        "MONGO_URI": {
+            "description": "MongoDB Connection String",
+            "required": true
+        },
+        "DB_CHANNEL_ID": {
+            "description": "Channel ID where files will be stored (with -100)",
+            "required": true
+        },
+        "ADMIN_IDS": {
+            "description": "Admin user IDs (separated by space)",
+            "required": true
+        }
+    },
+    "buildpacks": [
+        {
+            "url": "heroku/python"
+        }
+    ],
+    "formation": {
+        "worker": {
+            "quantity": 1,
+            "size": "basic"
+        }
+    }
+}
