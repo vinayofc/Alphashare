@@ -75,3 +75,4 @@ class Database:
 
     async def get_all_users(self) -> List[Dict[str, Any]]:
         return await self.users.find({}).to_list(None)
+        
