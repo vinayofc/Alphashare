@@ -63,3 +63,4 @@ def TimeFormatter(seconds: int) -> str:
         (f"{seconds}s" if seconds else "")
     )
     return tmp
+    
