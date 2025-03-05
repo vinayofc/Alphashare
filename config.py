@@ -14,6 +14,10 @@ API_HASH = os.getenv("API_HASH", "8a81215989c379cff068a88aa7b24f96")
 MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://zepixtech:zepix@cluster0rr.ilv5x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0rr")
 DATABASE_NAME = os.getenv("DATABASE_NAME", "file_share_bot")
 
+# Auto Delete Configuration
+AUTO_DELETE_ENABLED = True
+AUTO_DELETE_TIMER = int(os.getenv("AUTO_DELETE_TIMER", "5"))  # Default 5 minutes
+
 # Channel Configuration
 DB_CHANNEL_ID = int(os.getenv("DB_CHANNEL_ID", "-1002439416325"))
 FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL", "-1001800664082"))
@@ -58,6 +62,7 @@ Hello {user_mention}! I'm your secure file sharing assistant.
 • Multiple File Types
 • Real-time Tracking
 • Force Subscribe
+• Auto-Delete Timer
 
 📢 Join @Thealphabotz for updates!
 👨‍💻 Contact @adarsh2626 for support
@@ -79,12 +84,14 @@ Use /help to see available commands!
 • /broadcast - Send broadcast
 • /delete - Delete file
 • /fileinfo - File details
+• /setautodelete - Set auto-delete timer
 
 📝 **How to use:**
 1. Admins can upload by replying /upload
 2. Users can download via shared links
 3. Must join channel to download
 4. Each file has unique link
+5. Copyright files auto-delete after timer
 
 ⚠️ For support: @adarsh2626
 """
@@ -106,6 +113,7 @@ Use /help to see available commands!
 • Admin Controls
 • Real-time Stats
 • Multiple File Types
+• Auto-Delete Timer
 
 Made with ❤️ by @adarsh2626
 """
@@ -120,8 +128,12 @@ Made with ❤️ by @adarsh2626
 **Uploaded:** {upload_time}
 **By:** {uploader}
 
+⏳ **Auto-Delete Timer:** {auto_delete_time} minutes
+
 🔗 **Share Link:**
 `{share_link}`
+
+⚠️ This file will be automatically deleted after {auto_delete_time} minutes!
 """
 
     FORCE_SUB_TEXT = """
@@ -131,6 +143,20 @@ Please join our channel to use this bot:
 • @Thealphabotz
 
 Click button below, then try again!
+"""
+
+    AUTO_DELETE_WARNING = """
+⚠️ **Copyright Notice**
+This file will be automatically deleted in {minutes} minutes due to copyright issues.
+Please save it before it expires!
+
+⏳ **Time Remaining:** {minutes} minutes
+"""
+
+    AUTO_DELETE_EXPIRED = """
+🚨 **File Deleted**
+Your file has been automatically deleted due to copyright issues.
+You can request it again using the same link.
 """
 
 # Button Templates
@@ -174,6 +200,9 @@ class Buttons:
             [
                 {"text": "Download 📥", "callback_data": f"download_{file_uuid}"},
                 {"text": "Share 🔗", "callback_data": f"share_{file_uuid}"}
+            ],
+            [
+                {"text": "Check Timer ⏳", "callback_data": f"check_time_{file_uuid}"}
             ],
             [
                 {"text": "Channel 📢", "url": CHANNEL_LINK}
