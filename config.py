@@ -24,7 +24,7 @@ FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL", "-1001800664082"))
 
 # New Force Subscribe Configuration
 FORCE_SUB_WITH_JOIN_REQUEST = int(os.getenv("FORCE_SUB_WITH_JOIN_REQUEST", "0"))  # Default 0 (disabled)
-PRIVATE_FORCE_SUB_CHANNEL = int(os.getenv("PRIVATE_FORCE_SUB_CHANNEL", "0"))  # Default 0 (disabled)
+PRIVATE_FORCE_SUB_CHANNEL = int(os.getenv("PRIVATE_FORCE_SUB_CHANNEL", "-1002198832577"))  # Default 0 (disabled)
 
 # Bot Information
 BOT_USERNAME = os.getenv("BOT_USERNAME", "Musicuploadxdownbot")
