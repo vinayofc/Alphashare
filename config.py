@@ -22,6 +22,10 @@ AUTO_DELETE_TIMER = int(os.getenv("AUTO_DELETE_TIMER", "5"))  # Default 5 minute
 DB_CHANNEL_ID = int(os.getenv("DB_CHANNEL_ID", "-1002439416325"))
 FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL", "-1001800664082"))
 
+# New Force Subscribe Configuration
+FORCE_SUB_WITH_JOIN_REQUEST = int(os.getenv("FORCE_SUB_WITH_JOIN_REQUEST", "0"))  # Default 0 (disabled)
+PRIVATE_FORCE_SUB_CHANNEL = int(os.getenv("PRIVATE_FORCE_SUB_CHANNEL", "0"))  # Default 0 (disabled)
+
 # Bot Information
 BOT_USERNAME = os.getenv("BOT_USERNAME", "Musicuploadxdownbot")
 BOT_NAME = os.getenv("BOT_NAME", "Alpha File Share Bot")
@@ -89,7 +93,7 @@ Use /help to see available commands!
 📝 **How to use:**
 1. Admins can upload by replying /upload
 2. Users can download via shared links
-3. Must join channel to download
+3. Must join required channels
 4. Each file has unique link
 5. Copyright files auto-delete after timer
 
@@ -139,10 +143,38 @@ Made with ❤️ by @adarsh2626
     FORCE_SUB_TEXT = """
 ⚠️ **Access Restricted!**
 
-Please join our channel to use this bot:
-• @Thealphabotz
+Please join our required channels to use the bot:
 
-Click button below, then try again!
+1️⃣ Main Channel: @Thealphabotz
+{private_channel}
+
+Click the buttons below to join, then try again!
+"""
+
+    PRIVATE_FORCE_SUB_TEXT = """
+2️⃣ Special Channel: Join request required
+• Click "Join Private Channel"
+• Send join request
+• Wait for approval
+• Click "Check Access"
+"""
+
+    WAIT_FOR_APPROVAL = """
+⏳ **Waiting for Approval**
+
+Your join request is pending.
+Please wait for admin approval.
+
+Click "Check Access" once approved!
+"""
+
+    JOIN_REQUEST_APPROVED = """
+✅ **Access Granted!**
+
+Your join request was approved.
+You can now use the bot!
+
+Thank you for joining!
 """
 
     AUTO_DELETE_WARNING = """
@@ -194,6 +226,25 @@ class Buttons:
                 {"text": "Channel 📢", "url": CHANNEL_LINK}
             ]
         ]
+
+    def force_sub_buttons(main_invite: str = None, private_invite: str = None) -> List[List[Dict[str, str]]]:
+        buttons = []
+        
+        if main_invite:
+            buttons.append([
+                {"text": "Join Main Channel 📢", "url": main_invite}
+            ])
+            
+        if private_invite:
+            buttons.append([
+                {"text": "Join Private Channel 🔒", "url": private_invite}
+            ])
+            
+        buttons.append([
+            {"text": "Check Access 🔄", "callback_data": "checksub"}
+        ])
+        
+        return buttons
 
     def file_buttons(file_uuid: str) -> List[List[Dict[str, str]]]:
         return [
