@@ -20,8 +20,7 @@ class Database:
             "file_type": file_data["file_type"],
             "uuid": file_data["uuid"],
             "uploader_id": file_data["uploader_id"],
-            "message_id": file_data["message_id"],  # Changed from msg_id to message_id
-            "upload_time": datetime.utcnow(),
+            "message_id": file_data["message_id"],  
             "downloads": 0
         }
         await self.files.insert_one(file_doc)
