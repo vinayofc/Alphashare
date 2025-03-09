@@ -6,7 +6,7 @@ import asyncio
 import os
 from pathlib import Path
 import threading
-
+from handlers.join_request_handler import handle_join_request, handle_join_request_action
 # Initialize Flask app
 app = Flask(__name__)
 
