@@ -34,35 +34,12 @@
 
 ## 🌟 Features
 
-- 🔐 **Admin-Only Uploads**
-  - Only authorized admins can upload files
-  - Secure file management system
-  - Multi-admin support
-
-- 🌐 **Universal File Support**
-  - Images, Videos, Documents
-  - Audio files & Voice messages
-  - All telegram supported files
-
-- 🎯 **Unique File Sharing**
-  - UUID-based unique links
-  - One-click file access
-  - Real-time download tracking
-
-- 📊 **Advanced Statistics**
-  - Track total downloads
-  - Monitor storage usage
-  - User engagement metrics
-
-- 💫 **Professional UI**
-  - Clean message formatting
-  - Interactive inline buttons
-  - Real-time progress bars
-
-- 🔒 **Security Features**
-  - Admin verification
-  - Download monitoring
-  - File access control
+- **Admin-Only Uploads**: Authorized admins can securely upload files with multi-admin support.
+- **Universal File Support**: Supports images, videos, documents, audio files, and all Telegram-supported files.
+- **Unique File Sharing**: UUID-based unique links with real-time download tracking.
+- **Advanced Statistics**: Track downloads, monitor storage usage, and view user engagement metrics.
+- **Professional UI**: Clean formatting, interactive inline buttons, and real-time progress bars.
+- **Security Features**: Admin verification, download monitoring, and file access control.
 
 ## 🛠️ Installation
 
@@ -89,11 +66,11 @@ pip install -r requirements.txt
 python main.py
 ```
 
-### 🚀 Heroku Deployment
+### Heroku Deployment
 
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/utkarshdubey2008/AlphaShareBot)
 
-### 🔧 Required Variables
+### Required Variables
 
 ```
 BOT_TOKEN - Get from @BotFather
@@ -106,14 +83,16 @@ ADMIN_IDS - List of admin user IDs
 
 ## 📚 Commands
 
-### 👤 User Commands
+### User Commands
+
 ```
 /start - Start the bot
 /help - Show help message
 /about - About the bot
 ```
 
-### 👑 Admin Commands
+### Admin Commands
+
 ```
 /upload - Upload files (reply to file)
 /stats - Get bot statistics
@@ -122,13 +101,45 @@ ADMIN_IDS - List of admin user IDs
 /fileinfo - Get file information
 ```
 
+## Supported Types, Extensions, and MIME Types
+
+### Supported Types
+
+```python
+SUPPORTED_TYPES = [
+    "document", "video", "audio", "photo", "voice", "video_note", "animation"
+]
+```
+
+### Supported Extensions
+
+```python
+SUPPORTED_EXTENSIONS = [
+    "pdf", "txt", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "py", "js", "html",
+    "css", "json", "xml", "yaml", "yml", "zip", "rar", "7z", "tar", "gz", "bz2",
+    "mp4", "mp3", "m4a", "wav", "avi", "mkv", "flv", "mov", "webm", "3gp", "m4v",
+    "ogg", "opus", "jpg", "jpeg", "png", "gif", "webp", "bmp", "ico", "apk", "exe",
+    "msi", "deb", "rpm", "text", "log", "csv", "md", "srt", "sub"
+]
+```
+
+### Supported MIME Types
+
+```python
+SUPPORTED_MIME_TYPES = [
+    "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/zip", "application/x-rar-compressed", "application/x-7z-compressed", "video/mp4", "audio/mpeg",
+    "audio/mp4", "image/jpeg", "image/png", "image/gif", "application/vnd.android.package-archive", "application/x-executable"
+]
+```
+
 ## 📦 Tech Stack
 
-- [**Python**](https://www.python.org/) - Programming Language
-- [**Pyrogram**](https://docs.pyrogram.org/) - Telegram MTProto API Framework
-- [**MongoDB**](https://www.mongodb.com/) - Database
-- [**Motor**](https://motor.readthedocs.io/) - Async MongoDB Driver
-- [**aiofiles**](https://github.com/Tinche/aiofiles) - Async File Operations
+- **Python** - Programming Language
+- **Pyrogram** - Telegram MTProto API Framework
+- **MongoDB** - Database
+- **Motor** - Async MongoDB Driver
+- **aiofiles** - Async File Operations
 
 ## 📋 Dependencies
 
@@ -144,7 +155,7 @@ ADMIN_IDS - List of admin user IDs
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please submit a Pull Request.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
