@@ -14,17 +14,9 @@ API_HASH = os.getenv("API_HASH", "8a81215989c379cff068a88aa7b24f96")
 MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://zepixtech:zepix@cluster0rr.ilv5x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0rr")
 DATABASE_NAME = os.getenv("DATABASE_NAME", "file_share_bot")
 
-# Auto Delete Configuration
-AUTO_DELETE_ENABLED = True
-AUTO_DELETE_TIMER = int(os.getenv("AUTO_DELETE_TIMER", "5"))  # Default 5 minutes
-
 # Channel Configuration
 DB_CHANNEL_ID = int(os.getenv("DB_CHANNEL_ID", "-1002439416325"))
 FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL", "-1001800664082"))
-
-# New Force Subscribe Configuration
-FORCE_SUB_WITH_JOIN_REQUEST = int(os.getenv("FORCE_SUB_WITH_JOIN_REQUEST", "0"))  # Default 0 (disabled)
-PRIVATE_FORCE_SUB_CHANNEL = int(os.getenv("PRIVATE_FORCE_SUB_CHANNEL", "-1002198832577"))  # Default 0 (disabled)
 
 # Bot Information
 BOT_USERNAME = os.getenv("BOT_USERNAME", "Musicuploadxdownbot")
@@ -38,7 +30,7 @@ SUPPORT_LINK = "https://t.me/adarsh2626"
 
 # Admin Configuration
 ADMIN_IDS: List[int] = [
-    2009509228,  # Main Admin
+    2009509228,  
 ]
 
 # File Configuration
@@ -66,7 +58,6 @@ Hello {user_mention}! I'm your secure file sharing assistant.
 • Multiple File Types
 • Real-time Tracking
 • Force Subscribe
-• Auto-Delete Timer
 
 📢 Join @Thealphabotz for updates!
 👨‍💻 Contact @adarsh2626 for support
@@ -88,14 +79,12 @@ Use /help to see available commands!
 • /broadcast - Send broadcast
 • /delete - Delete file
 • /fileinfo - File details
-• /setautodelete - Set auto-delete timer
 
 📝 **How to use:**
 1. Admins can upload by replying /upload
 2. Users can download via shared links
-3. Must join required channels
+3. Must join channel to download
 4. Each file has unique link
-5. Copyright files auto-delete after timer
 
 ⚠️ For support: @adarsh2626
 """
@@ -117,7 +106,6 @@ Use /help to see available commands!
 • Admin Controls
 • Real-time Stats
 • Multiple File Types
-• Auto-Delete Timer
 
 Made with ❤️ by @adarsh2626
 """
@@ -132,63 +120,17 @@ Made with ❤️ by @adarsh2626
 **Uploaded:** {upload_time}
 **By:** {uploader}
 
-⏳ **Auto-Delete Timer:** {auto_delete_time} minutes
-
 🔗 **Share Link:**
 `{share_link}`
-
-⚠️ This file will be automatically deleted after {auto_delete_time} minutes!
 """
 
     FORCE_SUB_TEXT = """
 ⚠️ **Access Restricted!**
 
-Please join our required channels to use the bot:
+Please join our channel to use this bot:
+• @Thealphabotz
 
-1️⃣ Main Channel: @Thealphabotz
-{private_channel}
-
-Click the buttons below to join, then try again!
-"""
-
-    PRIVATE_FORCE_SUB_TEXT = """
-2️⃣ Special Channel: Join request required
-• Click "Join Private Channel"
-• Send join request
-• Wait for approval
-• Click "Check Access"
-"""
-
-    WAIT_FOR_APPROVAL = """
-⏳ **Waiting for Approval**
-
-Your join request is pending.
-Please wait for admin approval.
-
-Click "Check Access" once approved!
-"""
-
-    JOIN_REQUEST_APPROVED = """
-✅ **Access Granted!**
-
-Your join request was approved.
-You can now use the bot!
-
-Thank you for joining!
-"""
-
-    AUTO_DELETE_WARNING = """
-⚠️ **Copyright Notice**
-This file will be automatically deleted in {minutes} minutes due to copyright issues.
-Please save it before it expires!
-
-⏳ **Time Remaining:** {minutes} minutes
-"""
-
-    AUTO_DELETE_EXPIRED = """
-🚨 **File Deleted**
-Your file has been automatically deleted due to copyright issues.
-You can request it again using the same link.
+Click button below, then try again!
 """
 
 # Button Templates
@@ -227,33 +169,11 @@ class Buttons:
             ]
         ]
 
-    def force_sub_buttons(main_invite: str = None, private_invite: str = None) -> List[List[Dict[str, str]]]:
-        buttons = []
-        
-        if main_invite:
-            buttons.append([
-                {"text": "Join Main Channel 📢", "url": main_invite}
-            ])
-            
-        if private_invite:
-            buttons.append([
-                {"text": "Join Private Channel 🔒", "url": private_invite}
-            ])
-            
-        buttons.append([
-            {"text": "Check Access 🔄", "callback_data": "checksub"}
-        ])
-        
-        return buttons
-
     def file_buttons(file_uuid: str) -> List[List[Dict[str, str]]]:
         return [
             [
                 {"text": "Download 📥", "callback_data": f"download_{file_uuid}"},
                 {"text": "Share 🔗", "callback_data": f"share_{file_uuid}"}
-            ],
-            [
-                {"text": "Check Timer ⏳", "callback_data": f"check_time_{file_uuid}"}
             ],
             [
                 {"text": "Channel 📢", "url": CHANNEL_LINK}
@@ -272,3 +192,4 @@ class Progress:
 **💭 Total:** {4}
 **⏰ Time Left:** {5}
 """
+    
