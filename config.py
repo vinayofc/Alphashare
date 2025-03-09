@@ -43,6 +43,19 @@ SUPPORTED_TYPES = [
     "voice",
     "video_note",
     "animation"
+    "mp4",
+    "mp3",
+    "m4a",
+    "apk",
+    "zip",
+    "txt",
+    "py",
+    "pdf",
+    "text",
+    "link",
+    "jpg",
+    "jpeg",
+    "png"
 ]
 
 # Message Templates
