@@ -6,37 +6,39 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Bot Configuration
-BOT_TOKEN = os.getenv("BOT_TOKEN", "2050125681:AAHQx3QVWs1CVlxDOgXjmWlTWaioHW7tWvw")
-API_ID = int(os.getenv("API_ID", "7828653"))
-API_HASH = os.getenv("API_HASH", "8a81215989c379cff068a88aa7b24f96")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+API_ID = int(os.getenv("API_ID"))
+API_HASH = os.getenv("API_HASH")
 
 # Database Configuration
-MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://zepixtech:zepix@cluster0rr.ilv5x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0rr")
-DATABASE_NAME = os.getenv("DATABASE_NAME", "file_share_bot")
+MONGO_URI = os.getenv("MONGO_URI")
+DATABASE_NAME = os.getenv("DATABASE_NAME")
 
 # Channel Configuration
-DB_CHANNEL_ID = int(os.getenv("DB_CHANNEL_ID", "-1002439416325")) #Db Channle id
-FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL", "-1002300128227")) #Force sub channel id
+DB_CHANNEL_ID = int(os.getenv("DB_CHANNEL_ID"))
+FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL"))
 
 # Bot Information
-BOT_USERNAME = os.getenv("BOT_USERNAME", "Musicuploadxdownbot")
-BOT_NAME = os.getenv("BOT_NAME", "Alpha File Share Bot")
-BOT_VERSION = "1.0.0"  
+BOT_USERNAME = os.getenv("BOT_USERNAME")
+BOT_NAME = os.getenv("BOT_NAME")
+BOT_VERSION = "1.0.0"
 
 # Links
-CHANNEL_LINK = "https://t.me/+r2SFilDJgEsxNjY1" #force sub channel link
-DEVELOPER_LINK = "https://t.me/adarsh2626"
-SUPPORT_LINK = "https://t.me/adarsh2626" #Put your support group link or owner link
+CHANNEL_LINK = os.getenv("CHANNEL_LINK")
+DEVELOPER_LINK = os.getenv("DEVELOPER_LINK")
+SUPPORT_LINK = os.getenv("SUPPORT_LINK")
 
-
+# Admin IDs - Convert space-separated string to list of integers
 ADMIN_IDS: List[int] = [
-    2009509228,  
+    int(admin_id.strip())
+    for admin_id in os.getenv("ADMIN_IDS", "").split()
+    if admin_id.strip().isdigit()
 ]
 
+# File size limit (2GB in bytes)
+MAX_FILE_SIZE = 2000 * 1024 * 1024
 
-MAX_FILE_SIZE = 2000 * 1024 * 1024  # 2GB in bytes
-
-
+# Supported file types and extensions
 SUPPORTED_TYPES = [
     "document",
     "video",
@@ -46,7 +48,6 @@ SUPPORTED_TYPES = [
     "video_note",
     "animation"
 ]
-
 
 SUPPORTED_EXTENSIONS = [
     # Documents
@@ -66,28 +67,22 @@ SUPPORTED_EXTENSIONS = [
     "txt", "text", "log", "csv", "md", "srt", "sub"
 ]
 
-# MIME Types for Additional Validation
 SUPPORTED_MIME_TYPES = [
-    
     "application/pdf",
     "application/msword",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    
     "application/zip",
     "application/x-rar-compressed",
     "application/x-7z-compressed",
-    
     "video/mp4",
     "audio/mpeg",
     "audio/mp4",
     "image/jpeg",
     "image/png",
     "image/gif",
-    
     "application/vnd.android.package-archive",
     "application/x-executable",
 ]
-
 
 class Messages:
     START_TEXT = """
@@ -120,8 +115,6 @@ Use /help to see available commands!
 • /upload - Upload file (reply to file)
 • /stats - View statistics
 • /broadcast - Send broadcast
-• /delete - Delete file
-• /fileinfo - File details
 
 📝 **Supported File Types:**
 • Documents (PDF, DOC, XLS, etc.)
