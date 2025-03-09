@@ -2,7 +2,7 @@ from typing import List, Dict
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
+
 load_dotenv()
 
 # Bot Configuration
@@ -16,15 +16,17 @@ DATABASE_NAME = os.getenv("DATABASE_NAME", "file_share_bot")
 
 # Channel Configuration
 DB_CHANNEL_ID = int(os.getenv("DB_CHANNEL_ID", "-1002439416325"))
-FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL", "-1002300128227"))
+FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL", "0"))
+PRIVATE_REQUEST = os.getenv("PRIVATE_REQUEST", "False").lower() == "true"
+JOIN_REQUEST_CHANNEL = int(os.getenv("JOIN_REQUEST_CHANNEL", "-1002300128227"))
 
 # Bot Information
 BOT_USERNAME = os.getenv("BOT_USERNAME", "Musicuploadxdownbot")
 BOT_NAME = os.getenv("BOT_NAME", "Alpha File Share Bot")
-BOT_VERSION = "1.1.1"  # Updated version number
+BOT_VERSION = "1.0.0"
 
 # Links
-CHANNEL_LINK = "https://t.me/+r2SFilDJgEsxNjY1"
+CHANNEL_LINK = os.getenv("CHANNEL_LINK", "https://t.me/+r2SFilDJgEsxNjY1")
 DEVELOPER_LINK = "https://t.me/adarsh2626"
 SUPPORT_LINK = "https://t.me/adarsh2626"
 
@@ -101,6 +103,7 @@ Hello {user_mention}! I'm your secure file sharing assistant.
 • Multiple File Types Support
 • Real-time Tracking
 • Force Subscribe
+• Join Request Management
 
 📢 Join @Thealphabotz for updates!
 👨‍💻 Contact @adarsh2626 for support
@@ -122,6 +125,7 @@ Use /help to see available commands!
 • /broadcast - Send broadcast
 • /delete - Delete file
 • /fileinfo - File details
+• /joinrequests - View pending join requests
 
 📝 **Supported File Types:**
 • Documents (PDF, DOC, XLS, etc.)
@@ -153,6 +157,7 @@ Use /help to see available commands!
 • Real-time Stats
 • Multiple File Types
 • Enhanced Security
+• Join Request Management
 • Automatic File Type Detection
 
 Made with ❤️ by @adarsh2626
