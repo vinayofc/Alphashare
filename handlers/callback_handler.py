@@ -53,3 +53,4 @@ async def callback_handler(client: Client, callback: CallbackQuery):
         )
     
     await callback.answer()
+    
