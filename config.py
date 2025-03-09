@@ -15,30 +15,28 @@ MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://zepixtech:zepix@cluster0rr.ilv
 DATABASE_NAME = os.getenv("DATABASE_NAME", "file_share_bot")
 
 # Channel Configuration
-DB_CHANNEL_ID = int(os.getenv("DB_CHANNEL_ID", "-1002439416325"))
-FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL", "0"))
-PRIVATE_REQUEST = os.getenv("PRIVATE_REQUEST", "False").lower() == "true"
-JOIN_REQUEST_CHANNEL = int(os.getenv("JOIN_REQUEST_CHANNEL", "-1002300128227"))
+DB_CHANNEL_ID = int(os.getenv("DB_CHANNEL_ID", "-1002439416325")) #Db Channle id
+FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL", "-1002300128227")) #Force sub channel id
 
 # Bot Information
 BOT_USERNAME = os.getenv("BOT_USERNAME", "Musicuploadxdownbot")
 BOT_NAME = os.getenv("BOT_NAME", "Alpha File Share Bot")
-BOT_VERSION = "1.0.0"
+BOT_VERSION = "1.0.0"  
 
 # Links
-CHANNEL_LINK = os.getenv("CHANNEL_LINK", "https://t.me/+r2SFilDJgEsxNjY1")
+CHANNEL_LINK = "https://t.me/+r2SFilDJgEsxNjY1" #force sub channel link
 DEVELOPER_LINK = "https://t.me/adarsh2626"
-SUPPORT_LINK = "https://t.me/adarsh2626"
+SUPPORT_LINK = "https://t.me/adarsh2626" #Put your support group link or owner link
 
-# Admin Configuration
+
 ADMIN_IDS: List[int] = [
-    2009509228,  # Main admin
+    2009509228,  
 ]
 
-# File Configuration
+
 MAX_FILE_SIZE = 2000 * 1024 * 1024  # 2GB in bytes
 
-# Media Types Configuration
+
 SUPPORTED_TYPES = [
     "document",
     "video",
@@ -49,7 +47,7 @@ SUPPORTED_TYPES = [
     "animation"
 ]
 
-# Supported File Extensions
+
 SUPPORTED_EXTENSIONS = [
     # Documents
     "pdf", "txt", "doc", "docx", "xls", "xlsx", "ppt", "pptx",
@@ -70,27 +68,27 @@ SUPPORTED_EXTENSIONS = [
 
 # MIME Types for Additional Validation
 SUPPORTED_MIME_TYPES = [
-    # Documents
+    
     "application/pdf",
     "application/msword",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    # Archives
+    
     "application/zip",
     "application/x-rar-compressed",
     "application/x-7z-compressed",
-    # Media
+    
     "video/mp4",
     "audio/mpeg",
     "audio/mp4",
     "image/jpeg",
     "image/png",
     "image/gif",
-    # Applications
+    
     "application/vnd.android.package-archive",
     "application/x-executable",
 ]
 
-# Message Templates
+
 class Messages:
     START_TEXT = """
 🎉 **Welcome to {bot_name}!** 🎉
@@ -103,7 +101,6 @@ Hello {user_mention}! I'm your secure file sharing assistant.
 • Multiple File Types Support
 • Real-time Tracking
 • Force Subscribe
-• Join Request Management
 
 📢 Join @Thealphabotz for updates!
 👨‍💻 Contact @adarsh2626 for support
@@ -125,7 +122,6 @@ Use /help to see available commands!
 • /broadcast - Send broadcast
 • /delete - Delete file
 • /fileinfo - File details
-• /joinrequests - View pending join requests
 
 📝 **Supported File Types:**
 • Documents (PDF, DOC, XLS, etc.)
@@ -157,7 +153,6 @@ Use /help to see available commands!
 • Real-time Stats
 • Multiple File Types
 • Enhanced Security
-• Join Request Management
 • Automatic File Type Detection
 
 Made with ❤️ by @adarsh2626
@@ -186,7 +181,6 @@ Bot By @Thealphabotz
 Click button below, then try again!
 """
 
-# Button Templates
 class Buttons:
     def start_buttons() -> List[List[Dict[str, str]]]:
         return [
@@ -233,7 +227,7 @@ class Buttons:
             ]
         ]
 
-# Progress Bar Configuration
+
 class Progress:
     PROGRESS_BAR = "█"
     EMPTY_PROGRESS_BAR = "░"
