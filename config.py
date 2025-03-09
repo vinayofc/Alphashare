@@ -2,20 +2,20 @@ from typing import List, Dict
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
+
 load_dotenv()
 
-# Bot Configuration
+
 BOT_TOKEN = os.getenv("BOT_TOKEN", "2050125681:AAHQx3QVWs1CVlxDOgXjmWlTWaioHW7tWvw")
 API_ID = int(os.getenv("API_ID", "7828653"))
 API_HASH = os.getenv("API_HASH", "8a81215989c379cff068a88aa7b24f96")
 
-# MongoDB Configuration
+
 MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://zepixtech:zepix@cluster0rr.ilv5x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0rr")
 DATABASE_NAME = os.getenv("DATABASE_NAME", "file_share_bot")
 
 # Channel Configuration
-DB_CHANNEL_ID = int(os.getenv("DB_CHANNEL_ID", "-1002439416325"))
+DB_CHANNEL_ID = int(os.getenv("DB_CHANNEL_ID", "-1002439416325")) # this is required for forcesub channel
 FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL", "-1001800664082"))
 
 # Bot Information
@@ -24,9 +24,9 @@ BOT_NAME = os.getenv("BOT_NAME", "Alpha File Share Bot")
 BOT_VERSION = "1.0.0"
 
 # Links
-CHANNEL_LINK = "https://t.me/Thealphabotz"
+CHANNEL_LINK = "https://t.me/Thealphabotz" # this is for forcesub channel link
 DEVELOPER_LINK = "https://t.me/adarsh2626"
-SUPPORT_LINK = "https://t.me/adarsh2626"
+SUPPORT_LINK = "https://t.me/adarsh2626" #put your support chat link here
 
 # Admin Configuration
 ADMIN_IDS: List[int] = [
@@ -141,7 +141,7 @@ Made with ❤️ by @adarsh2626
 ⚠️ **Access Restricted!**
 
 Please join our channel to use this bot:
-• @Thealphabotz
+Bot By @Thealphabotz
 
 Click button below, then try again!
 """
