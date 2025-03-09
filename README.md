@@ -179,7 +179,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [All Contributors](https://github.com/utkarshdubey2008/AlphaShare/graphs/contributors)
 
 <p align="center">
-  <b>Last Updated: 2025-03-04 05:03:33 UTC</b>
+  <b>Last Updated: 9-04-2025 07:56:10 IST</b>
   <br>
   <i>Made with ❤️ by <a href="https://t.me/adarsh2626">Adarsh</a></i>
 </p>
