@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://github.com/utkarshdubey2008/AlphaShareBot">
-    <img src="https://envs.sh/S4Y.jpeg" alt="Alpha Share Bot" width="500">
+    <img src="https://envs.sh/SlS.jpg" alt="Alpha Share Bot" width="500">
   </a>
   <br>
   <b>A Powerful File Sharing Bot for Telegram</b>
