@@ -5,7 +5,7 @@ import config
 from typing import Dict, Any, Optional, List, Tuple
 
 class Database:
-def init(self):
+def __init__(self):
 self.client = AsyncIOMotorClient(config.MONGO_URI)
 self.db = self.client[config.DATABASE_NAME]
 self.files = self.db.files
