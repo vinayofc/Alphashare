@@ -1,4 +1,4 @@
-# Root directory __init__.py
+
 from .config import (
     BOT_TOKEN,
     API_ID,
