@@ -14,9 +14,9 @@ API_HASH = os.getenv("API_HASH", "8a81215989c379cff068a88aa7b24f96")
 MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://zepixtech:zepix@cluster0rr.ilv5x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0rr")
 DATABASE_NAME = os.getenv("DATABASE_NAME", "file_share_bot")
 
-# Channel Configuration
+
 DB_CHANNEL_ID = int(os.getenv("DB_CHANNEL_ID", "-1002439416325")) # this is required for forcesub channel
-FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL", "-1001800664082"))
+FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL", "-1002300128227"))
 
 # Bot Information
 BOT_USERNAME = os.getenv("BOT_USERNAME", "Musicuploadxdownbot")
@@ -24,7 +24,7 @@ BOT_NAME = os.getenv("BOT_NAME", "Alpha File Share Bot")
 BOT_VERSION = "1.0.0"
 
 # Links
-CHANNEL_LINK = "https://t.me/Thealphabotz" # this is for forcesub channel link
+CHANNEL_LINK = "https://t.me/+r2SFilDJgEsxNjY1" # this is for forcesub channel link
 DEVELOPER_LINK = "https://t.me/adarsh2626"
 SUPPORT_LINK = "https://t.me/adarsh2626" #put your support chat link here
 
