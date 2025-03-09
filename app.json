@@ -29,13 +29,44 @@
             "description": "MongoDB Connection String",
             "required": true
         },
+        "DATABASE_NAME": {
+            "description": "MongoDB Database Name",
+            "required": true,
+            "value": "file_share_bot"
+        },
         "DB_CHANNEL_ID": {
             "description": "Channel ID where files will be stored (with -100)",
             "required": true
         },
-        "ADMIN_IDS": {
-            "description": "Admin user IDs (separated by space)",
+        "FORCE_SUB_CHANNEL": {
+            "description": "Force Subscribe Channel ID (with -100)",
             "required": true
+        },
+        "BOT_USERNAME": {
+            "description": "Your bot username without @ symbol",
+            "required": true
+        },
+        "BOT_NAME": {
+            "description": "Your bot name",
+            "required": true,
+            "value": "Alpha File Share Bot"
+        },
+        "CHANNEL_LINK": {
+            "description": "Your Force Sub channel link",
+            "required": true
+        },
+        "DEVELOPER_LINK": {
+            "description": "Developer's Telegram username link",
+            "required": true
+        },
+        "SUPPORT_LINK": {
+            "description": "Support channel/group link",
+            "required": true
+        },
+        "ADMIN_IDS": {
+            "description": "Admin user IDs (space-separated numbers, e.g., '123456789 987654321')",
+            "required": true,
+            "value": "2009509228"
         }
     },
     "buildpacks": [
