@@ -19,7 +19,7 @@ async def start_command(client: Client, message: Message):
         if not await button_manager.check_force_sub(client, message.from_user.id):
             await message.reply_text(
                 "**⚠️ You must join our channel to use this bot!**\n\n"
-                "Please join @Thealphabotz and try again.",
+                "Please join Our Forcesub Channel and try again.",
                 reply_markup=button_manager.force_sub_button()
             )
             return
@@ -81,22 +81,29 @@ async def stats_command(client: Client, message: Message):
         f"💾 Total Size: {humanbytes(stats['total_size'])}"
     )
 
-@Client.on_message(filters.command("broadcast") & filters.user(config.ADMIN_IDS))
+@Client.on_message(filters.command("broadcast") & filters.reply)
 async def broadcast_command(client: Client, message: Message):
-    if len(message.command) < 2:
-        await message.reply_text("❌ Please provide a message to broadcast!")
+    replied_msg = message.reply_to_message
+    if not replied_msg:
+        await message.reply_text("❌ Please reply to a message or file to broadcast!")
         return
     
-    broadcast_msg = message.text.split(None, 1)[1]
     status_msg = await message.reply_text("🔄 Broadcasting message...")
-    
+
     users = await db.get_all_users()
     success = 0
     failed = 0
     
     for user in users:
         try:
-            await client.send_message(user["user_id"], broadcast_msg)
+            if replied_msg.text:
+                await client.send_message(user["user_id"], replied_msg.text)
+            elif replied_msg.media:
+                await client.copy_message(
+                    chat_id=user["user_id"],
+                    from_chat_id=replied_msg.chat.id,
+                    message_id=replied_msg.message_id
+                )
             success += 1
         except:
             failed += 1
@@ -159,4 +166,3 @@ async def upload_command(client: Client, message: Message):
         )
     except Exception as e:
         await status_msg.edit_text(f"❌ Error: {str(e)}")
-        
