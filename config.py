@@ -2,39 +2,41 @@ from typing import List, Dict
 import os
 from dotenv import load_dotenv
 
-
+# Load environment variables
 load_dotenv()
 
-
+# Bot Configuration
 BOT_TOKEN = os.getenv("BOT_TOKEN", "2050125681:AAHQx3QVWs1CVlxDOgXjmWlTWaioHW7tWvw")
 API_ID = int(os.getenv("API_ID", "7828653"))
 API_HASH = os.getenv("API_HASH", "8a81215989c379cff068a88aa7b24f96")
 
-
+# Database Configuration
 MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://zepixtech:zepix@cluster0rr.ilv5x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0rr")
 DATABASE_NAME = os.getenv("DATABASE_NAME", "file_share_bot")
 
-
-DB_CHANNEL_ID = int(os.getenv("DB_CHANNEL_ID", "-1002439416325")) # this is required for forcesub channel
+# Channel Configuration
+DB_CHANNEL_ID = int(os.getenv("DB_CHANNEL_ID", "-1002439416325"))
 FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL", "-1002300128227"))
 
 # Bot Information
 BOT_USERNAME = os.getenv("BOT_USERNAME", "Musicuploadxdownbot")
 BOT_NAME = os.getenv("BOT_NAME", "Alpha File Share Bot")
-BOT_VERSION = "1.0.0"
+BOT_VERSION = "1.1.1"  # Updated version number
 
 # Links
-CHANNEL_LINK = "https://t.me/+r2SFilDJgEsxNjY1" # this is for forcesub channel link
+CHANNEL_LINK = "https://t.me/+r2SFilDJgEsxNjY1"
 DEVELOPER_LINK = "https://t.me/adarsh2626"
-SUPPORT_LINK = "https://t.me/adarsh2626" #put your support chat link here
+SUPPORT_LINK = "https://t.me/adarsh2626"
 
 # Admin Configuration
 ADMIN_IDS: List[int] = [
-    2009509228,  
+    2009509228,  # Main admin
 ]
 
 # File Configuration
 MAX_FILE_SIZE = 2000 * 1024 * 1024  # 2GB in bytes
+
+# Media Types Configuration
 SUPPORTED_TYPES = [
     "document",
     "video",
@@ -43,19 +45,47 @@ SUPPORTED_TYPES = [
     "voice",
     "video_note",
     "animation"
-    "mp4",
-    "mp3",
-    "m4a",
-    "apk",
-    "zip",
-    "txt",
-    "py",
-    "pdf",
-    "text",
-    "link",
-    "jpg",
-    "jpeg",
-    "png"
+]
+
+# Supported File Extensions
+SUPPORTED_EXTENSIONS = [
+    # Documents
+    "pdf", "txt", "doc", "docx", "xls", "xlsx", "ppt", "pptx",
+    # Programming Files
+    "py", "js", "html", "css", "json", "xml", "yaml", "yml",
+    # Archives
+    "zip", "rar", "7z", "tar", "gz", "bz2",
+    # Media Files
+    "mp4", "mp3", "m4a", "wav", "avi", "mkv", "flv", "mov",
+    "webm", "3gp", "m4v", "ogg", "opus",
+    # Images
+    "jpg", "jpeg", "png", "gif", "webp", "bmp", "ico",
+    # Applications
+    "apk", "exe", "msi", "deb", "rpm",
+    # Other
+    "txt", "text", "log", "csv", "md", "srt", "sub"
+]
+
+# MIME Types for Additional Validation
+SUPPORTED_MIME_TYPES = [
+    # Documents
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    # Archives
+    "application/zip",
+    "application/x-rar-compressed",
+    "application/x-7z-compressed",
+    # Media
+    "video/mp4",
+    "audio/mpeg",
+    "audio/mp4",
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    # Applications
+    "application/vnd.android.package-archive",
+    "application/x-executable",
 ]
 
 # Message Templates
@@ -68,7 +98,7 @@ Hello {user_mention}! I'm your secure file sharing assistant.
 🔐 **Key Features:**
 • Secure File Sharing
 • Unique Download Links
-• Multiple File Types
+• Multiple File Types Support
 • Real-time Tracking
 • Force Subscribe
 
@@ -93,11 +123,14 @@ Use /help to see available commands!
 • /delete - Delete file
 • /fileinfo - File details
 
-📝 **How to use:**
-1. Admins can upload by replying /upload
-2. Users can download via shared links
-3. Must join channel to download
-4. Each file has unique link
+📝 **Supported File Types:**
+• Documents (PDF, DOC, XLS, etc.)
+• Videos (MP4, MKV, AVI, etc.)
+• Audio (MP3, M4A, WAV, etc.)
+• Images (JPG, PNG, GIF, etc.)
+• Archives (ZIP, RAR, 7Z, etc.)
+• Applications (APK, EXE, etc.)
+• Other Formats
 
 ⚠️ For support: @adarsh2626
 """
@@ -119,6 +152,8 @@ Use /help to see available commands!
 • Admin Controls
 • Real-time Stats
 • Multiple File Types
+• Enhanced Security
+• Automatic File Type Detection
 
 Made with ❤️ by @adarsh2626
 """
@@ -205,4 +240,3 @@ class Progress:
 **💭 Total:** {4}
 **⏰ Time Left:** {5}
 """
-    
