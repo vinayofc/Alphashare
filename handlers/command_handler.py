@@ -33,7 +33,7 @@ async def start_command(client: Client, message: Message):
             msg = await client.copy_message(
                 chat_id=message.chat.id,
                 from_chat_id=config.DB_CHANNEL_ID,
-                message_id=file_data["message_id"]  # Using message_id instead of msg_id
+                message_id=file_data["message_id"]
             )
             await db.increment_downloads(file_uuid)
         except Exception as e:
@@ -83,6 +83,10 @@ async def stats_command(client: Client, message: Message):
 
 @Client.on_message(filters.command("broadcast") & filters.reply)
 async def broadcast_command(client: Client, message: Message):
+    if not is_admin(message):
+        await message.reply_text("⚠️ You are not authorized to broadcast!")
+        return
+
     replied_msg = message.reply_to_message
     if not replied_msg:
         await message.reply_text("❌ Please reply to a message or file to broadcast!")
@@ -122,47 +126,103 @@ async def upload_command(client: Client, message: Message):
         return
     
     replied_msg = message.reply_to_message
-    if not replied_msg or not hasattr(replied_msg, 'media'):
-        await message.reply_text("❌ Please reply to a valid media file!")
+    if not replied_msg:
+        await message.reply_text("❌ Please reply to a valid file!")
         return
     
     status_msg = await message.reply_text("🔄 Processing...")
     
     try:
+        # Forward the message to DB channel
         forwarded_msg = await replied_msg.forward(config.DB_CHANNEL_ID)
         
-        file_type = None
-        for media_type in config.SUPPORTED_TYPES:
-            if hasattr(replied_msg, media_type):
-                file_type = media_type
-                break
-        
-        if not file_type:
+        # Initialize file data
+        file_data = {
+            "file_id": None,
+            "file_name": "Unknown",
+            "file_size": 0,
+            "file_type": None,
+            "uuid": str(uuid.uuid4()),
+            "uploader_id": message.from_user.id,
+            "message_id": forwarded_msg.id
+        }
+
+        # Check all possible media types
+        if replied_msg.document:
+            file_data.update({
+                "file_id": replied_msg.document.file_id,
+                "file_name": replied_msg.document.file_name or "document",
+                "file_size": replied_msg.document.file_size,
+                "file_type": "document"
+            })
+        elif replied_msg.video:
+            file_data.update({
+                "file_id": replied_msg.video.file_id,
+                "file_name": replied_msg.video.file_name or "video.mp4",
+                "file_size": replied_msg.video.file_size,
+                "file_type": "video"
+            })
+        elif replied_msg.audio:
+            file_data.update({
+                "file_id": replied_msg.audio.file_id,
+                "file_name": replied_msg.audio.file_name or "audio",
+                "file_size": replied_msg.audio.file_size,
+                "file_type": "audio"
+            })
+        elif replied_msg.photo:
+            file_data.update({
+                "file_id": replied_msg.photo.file_id,
+                "file_name": f"photo_{file_data['uuid']}.jpg",
+                "file_size": replied_msg.photo.file_size,
+                "file_type": "photo"
+            })
+        elif replied_msg.voice:
+            file_data.update({
+                "file_id": replied_msg.voice.file_id,
+                "file_name": f"voice_{file_data['uuid']}.ogg",
+                "file_size": replied_msg.voice.file_size,
+                "file_type": "voice"
+            })
+        elif replied_msg.video_note:
+            file_data.update({
+                "file_id": replied_msg.video_note.file_id,
+                "file_name": f"video_note_{file_data['uuid']}.mp4",
+                "file_size": replied_msg.video_note.file_size,
+                "file_type": "video_note"
+            })
+        elif replied_msg.animation:
+            file_data.update({
+                "file_id": replied_msg.animation.file_id,
+                "file_name": replied_msg.animation.file_name or f"animation_{file_data['uuid']}.gif",
+                "file_size": replied_msg.animation.file_size,
+                "file_type": "animation"
+            })
+        else:
             await status_msg.edit_text("❌ Unsupported file type!")
             return
-        
-        file_info = getattr(replied_msg, file_type)
-        file_uuid = str(uuid.uuid4())
-        
-        file_data = {
-            "file_id": file_info.file_id,
-            "file_name": getattr(file_info, 'file_name', 'Unknown'),
-            "file_size": getattr(file_info, 'file_size', 0),
-            "file_type": file_type,
-            "uuid": file_uuid,
-            "uploader_id": message.from_user.id,
-            "message_id": forwarded_msg.id  # Using message_id consistently
-        }
-        
+
+        # Check if file_id was set
+        if not file_data["file_id"]:
+            await status_msg.edit_text("❌ Could not process file!")
+            return
+
+        # Check file size
+        if file_data["file_size"] and file_data["file_size"] > config.MAX_FILE_SIZE:
+            await status_msg.edit_text(f"❌ File too large! Maximum size: {humanbytes(config.MAX_FILE_SIZE)}")
+            return
+
+        # Add file to database
         await db.add_file(file_data)
-        share_link = f"https://t.me/{config.BOT_USERNAME}?start={file_uuid}"
+        share_link = f"https://t.me/{config.BOT_USERNAME}?start={file_data['uuid']}"
         
+        # Send success message
         await status_msg.edit_text(
             f"✅ File uploaded successfully!\n\n"
             f"📁 File Name: {file_data['file_name']}\n"
             f"📊 Size: {humanbytes(file_data['file_size'])}\n"
+            f"📎 Type: {file_data['file_type']}\n"
             f"🔗 Share Link: {share_link}",
-            reply_markup=button_manager.file_button(file_uuid)
+            reply_markup=button_manager.file_button(file_data['uuid'])
         )
     except Exception as e:
         await status_msg.edit_text(f"❌ Error: {str(e)}")
