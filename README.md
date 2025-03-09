@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-  <a href="https://github.com/utkarshdubey2008/AlphaShareBot">
+  <a href="https://github.com/utkarshdubey2008/AlphaShare">
     <img src="https://envs.sh/SlS.jpg" alt="Alpha Share Bot" width="500">
   </a>
   <br>
@@ -14,18 +14,18 @@
   <a href="https://python.org">
     <img src="https://img.shields.io/badge/Python-3.11.6-blue?style=for-the-badge&logo=python" alt="Python Version">
   </a>
-  <a href="https://github.com/utkarshdubey2008/AlphaShareBot/stargazers">
-    <img src="https://img.shields.io/github/stars/utkarshdubey2008/AlphaShareBot?style=for-the-badge" alt="GitHub Stars">
+  <a href="https://github.com/utkarshdubey2008/AlphaShare/stargazers">
+    <img src="https://img.shields.io/github/stars/utkarshdubey2008/AlphaShare?style=for-the-badge" alt="GitHub Stars">
   </a>
-  <a href="https://github.com/utkarshdubey2008/AlphaShareBot/fork">
-    <img src="https://img.shields.io/github/forks/utkarshdubey2008/AlphaShareBot?style=for-the-badge" alt="GitHub Forks">
+  <a href="https://github.com/utkarshdubey2008/AlphaShare/fork">
+    <img src="https://img.shields.io/github/forks/utkarshdubey2008/AlphaShare?style=for-the-badge" alt="GitHub Forks">
   </a>
   <br>
-  <a href="https://github.com/utkarshdubey2008/AlphaShareBot/issues">
+  <a href="https://github.com/utkarshdubey2008/AlphaShare/issues">
     <img src="https://img.shields.io/github/issues/utkarshdubey2008/AlphaShareBot?style=for-the-badge" alt="GitHub Issues">
   </a>
-  <a href="https://github.com/utkarshdubey2008/AlphaShareBot/network/members">
-    <img src="https://img.shields.io/github/last-commit/utkarshdubey2008/AlphaShareBot?style=for-the-badge" alt="Last Commit">
+  <a href="https://github.com/utkarshdubey2008/AlphaShare/network/members">
+    <img src="https://img.shields.io/github/last-commit/utkarshdubey2008/AlphaShare?style=for-the-badge" alt="Last Commit">
   </a>
   <a href="https://t.me/Thealphabotz">
     <img src="https://img.shields.io/badge/Updates-Channel-blue?style=for-the-badge&logo=telegram" alt="Updates Channel">
@@ -47,7 +47,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/utkarshdubey2008/AlphaShareBot.git
+git clone https://github.com/utkarshdubey2008/AlphaShare.git
 
 # Navigate to directory
 cd AlphaShareBot
@@ -68,7 +68,7 @@ python main.py
 
 ### Heroku Deployment
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/utkarshdubey2008/AlphaShareBot)
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/utkarshdubey2008/AlphaShare)
 
 ### Required Variables
 
@@ -176,7 +176,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [Pyrogram](https://github.com/pyrogram/pyrogram)
 - [Adarsh](https://github.com/adarsh2626)
-- [All Contributors](https://github.com/utkarshdubey2008/AlphaShareBot/graphs/contributors)
+- [All Contributors](https://github.com/utkarshdubey2008/AlphaShare/graphs/contributors)
 
 <p align="center">
   <b>Last Updated: 2025-03-04 05:03:33 UTC</b>
