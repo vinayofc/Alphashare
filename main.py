@@ -5,8 +5,8 @@ from database import Database
 import config
 import asyncio
 import os
-from pathlib import Path
 import threading
+import time
 
 app = Flask(__name__)
 
@@ -14,7 +14,7 @@ app = Flask(__name__)
 def health_check():
     return jsonify({"status": "healthy"}), 200
 
-# Initialize bot client
+
 class FileShareBot(Client):
     def __init__(self):
         super().__init__(
@@ -55,13 +55,19 @@ async def main():
 def run_flask():
     app.run(host='0.0.0.0', port=8080)
 
+def keep_alive():
+    while True:
+        print("Keeping bot alive...")
+        time.sleep(300)  
+
 if __name__ == "__main__":
     try:
-        # Set event loop policy for Windows if needed
+        
         if os.name == 'nt':
             asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         
         threading.Thread(target=run_flask).start()
+        threading.Thread(target=keep_alive).start()
         loop = asyncio.get_event_loop()
         loop.run_until_complete(main())
     except KeyboardInterrupt:
