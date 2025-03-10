@@ -21,7 +21,7 @@ FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL"))
 # Bot Information
 BOT_USERNAME = os.getenv("BOT_USERNAME")
 BOT_NAME = os.getenv("BOT_NAME")
-BOT_VERSION = "1.0.0"
+BOT_VERSION = "1.1"
 
 # Links
 CHANNEL_LINK = os.getenv("CHANNEL_LINK")
@@ -115,6 +115,9 @@ Use /help to see available commands!
 • /upload - Upload file (reply to file)
 • /stats - View statistics
 • /broadcast - Send broadcast
+• Auto-Delete Feature:
+Files are automatically deleted after the set time.
+Use /auto_del to change the deletion time.
 
 📝 **Supported File Types:**
 • Documents (PDF, DOC, XLS, etc.)
