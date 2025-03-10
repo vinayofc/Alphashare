@@ -10,8 +10,51 @@ import datetime
 db = Database()
 button_manager = ButtonManager()
 
-# Dictionary to store waiting states
-waiting_for_time = {}
+@Client.on_message(filters.command("auto_del"))
+async def auto_delete_command(client: Client, message: Message):
+    if not is_admin(message):
+        await message.reply_text("⚠️ You are not authorized to use this command!")
+        return
+    
+    if len(message.command) != 2:
+        await message.reply_text(
+            "**📝 Auto Delete Command Usage**\n\n"
+            "`/auto_del <minutes>`\n\n"
+            "**Examples:**\n"
+            "• `/auto_del 5` - Set auto-delete to 5 minutes\n"
+            "• `/auto_del 60` - Set auto-delete to 1 hour\n"
+            "• `/auto_del 1440` - Set auto-delete to 24 hours\n\n"
+            "**Note:** Time must be between 1 and 10080 minutes (7 days)"
+        )
+        return
+    
+    try:
+        delete_time = int(message.command[1])
+        if not 1 <= delete_time <= 10080:
+            await message.reply_text(
+                "❌ **Invalid Time Range**\n\n"
+                "Time must be between 1 and 10080 minutes (7 days)\n"
+                "Examples:\n"
+                "• 5 = 5 minutes\n"
+                "• 60 = 1 hour\n"
+                "• 1440 = 24 hours"
+            )
+            return
+        
+        config.DEFAULT_AUTO_DELETE = delete_time
+        await message.reply_text(
+            f"✅ **Auto-delete time updated**\n\n"
+            f"New files will be automatically deleted after {delete_time} minutes\n"
+            f"Time in other units:\n"
+            f"• Hours: {delete_time/60:.1f}\n"
+            f"• Days: {delete_time/1440:.1f}"
+        )
+    except ValueError:
+        await message.reply_text(
+            "❌ **Invalid Time Format**\n\n"
+            "Please provide a valid number of minutes\n"
+            "Example: `/auto_del 30` for 30 minutes"
+        )
 
 @Client.on_message(filters.command("start"))
 async def start_command(client: Client, message: Message):
@@ -40,21 +83,19 @@ async def start_command(client: Client, message: Message):
                 message_id=file_data["message_id"]
             )
             await db.increment_downloads(file_uuid)
-            
-            # Update the message tracking in database
             await db.update_file_message_id(file_uuid, msg.id, message.chat.id)
             
-            # Add auto-delete functionality
             if file_data.get("auto_delete"):
                 delete_time = file_data.get("auto_delete_time")
                 if delete_time:
-                    # Send message with auto-delete info
                     info_msg = await msg.reply_text(
-                        f"⏳ This file will be removed from your chat in {delete_time} minutes.\n"
-                        "💡 Save it to your saved messages if needed!"
+                        f"⏳ **File Auto-Delete Information**\n\n"
+                        f"This file will be automatically deleted in {delete_time} minutes\n"
+                        f"• Delete Time: {delete_time} minutes\n"
+                        f"• Time Left: {delete_time} minutes\n"
+                        f"💡 **Save this file to your saved messages before it's deleted!**"
                     )
                     
-                    # Schedule deletion
                     asyncio.create_task(schedule_message_deletion(
                         client, file_uuid, message.chat.id, [msg.id, info_msg.id], delete_time
                     ))
@@ -72,12 +113,19 @@ async def start_command(client: Client, message: Message):
     )
 
 async def schedule_message_deletion(client: Client, file_uuid: str, chat_id: int, message_ids: list, delete_time: int):
-    """Schedule the deletion of messages from user chat"""
     await asyncio.sleep(delete_time * 60)
     try:
-        # Delete messages from user chat
         await client.delete_messages(chat_id, message_ids)
-        # Remove message references from database
+        await client.send_message(
+            chat_id=chat_id,
+            text=(
+                "🚫 **File Deleted Due to Copyright Protection**\n\n"
+                "The file you received has been automatically deleted as part of our copyright protection measures.\n\n"
+                "• If you need the file again, you can request it using the same link\n"
+                "• Save important files to your saved messages before they're deleted\n"
+                "• This helps us maintain a fair and legal file-sharing environment"
+            )
+        )
         for msg_id in message_ids:
             await db.remove_file_message(file_uuid, chat_id, msg_id)
     except Exception as e:
@@ -85,20 +133,31 @@ async def schedule_message_deletion(client: Client, file_uuid: str, chat_id: int
 
 @Client.on_message(filters.command("help"))
 async def help_command(client: Client, message: Message):
-    await message.reply_text(
-        config.Messages.HELP_TEXT,
-        reply_markup=button_manager.help_button()
+    help_text = (
+        "**📚 Bot Commands & Usage**\n\n"
+        "Here are the available commands:\n\n"
+        "👥 **User Commands:**\n"
+        "• /start - Start the bot\n"
+        "• /help - Show this help message\n"
+        "• /about - About the bot\n\n"
+        "👮‍♂️ **Admin Commands:**\n"
+        "• /upload - Upload a file (reply to file)\n"
+        "• /auto_del - Set auto-delete time\n"
+        "• /stats - View bot statistics\n"
+        "• /broadcast - Broadcast message to users\n\n"
+        "💡 **Auto-Delete Feature:**\n"
+        "Files are automatically deleted after the set time.\n"
+        "Use /auto_del to change the deletion time."
     )
+    await message.reply_text(help_text, reply_markup=button_manager.help_button())
 
 @Client.on_message(filters.command("about"))
 async def about_command(client: Client, message: Message):
-    await message.reply_text(
-        config.Messages.ABOUT_TEXT.format(
-            bot_name=config.BOT_NAME,
-            version=config.BOT_VERSION
-        ),
-        reply_markup=button_manager.about_button()
+    about_text = config.Messages.ABOUT_TEXT.format(
+        bot_name=config.BOT_NAME,
+        version=config.BOT_VERSION
     )
+    await message.reply_text(about_text, reply_markup=button_manager.about_button())
 
 @Client.on_message(filters.command("stats"))
 async def stats_command(client: Client, message: Message):
@@ -107,15 +166,16 @@ async def stats_command(client: Client, message: Message):
         return
     
     stats = await db.get_stats()
-    
-    await message.reply_text(
-        f"📊 **Bot Statistics**\n\n"
-        f"📁 Total Files: {stats['total_files']}\n"
-        f"👥 Total Users: {stats['total_users']}\n"
-        f"📥 Total Downloads: {stats['total_downloads']}\n"
-        f"💾 Total Size: {humanbytes(stats['total_size'])}\n"
-        f"🕒 Auto-Delete Files: {stats.get('active_autodelete_files', 0)}"
+    stats_text = (
+        "📊 **Bot Statistics**\n\n"
+        f"📁 Files: {stats['total_files']}\n"
+        f"👥 Users: {stats['total_users']}\n"
+        f"📥 Downloads: {stats['total_downloads']}\n"
+        f"💾 Size: {humanbytes(stats['total_size'])}\n"
+        f"🕒 Auto-Delete Files: {stats.get('active_autodelete_files', 0)}\n\n"
+        f"⏱ Current Auto-Delete Time: {getattr(config, 'DEFAULT_AUTO_DELETE', 30)} minutes"
     )
+    await message.reply_text(stats_text)
 
 @Client.on_message(filters.command("broadcast") & filters.reply)
 async def broadcast_command(client: Client, message: Message):
@@ -125,11 +185,10 @@ async def broadcast_command(client: Client, message: Message):
 
     replied_msg = message.reply_to_message
     if not replied_msg:
-        await message.reply_text("❌ Please reply to a message or file to broadcast!")
+        await message.reply_text("❌ Please reply to a message to broadcast!")
         return
     
     status_msg = await message.reply_text("🔄 Broadcasting message...")
-
     users = await db.get_all_users()
     success = 0
     failed = 0
@@ -147,13 +206,15 @@ async def broadcast_command(client: Client, message: Message):
             success += 1
         except:
             failed += 1
-        await asyncio.sleep(0.1)  # To avoid flooding
+        await asyncio.sleep(0.1)
     
-    await status_msg.edit_text(
-        f"✅ Broadcast completed!\n\n"
+    broadcast_text = (
+        "✅ **Broadcast Completed**\n\n"
         f"✓ Success: {success}\n"
-        f"× Failed: {failed}"
+        f"× Failed: {failed}\n"
+        f"📊 Total: {success + failed}"
     )
+    await status_msg.edit_text(broadcast_text)
 
 @Client.on_message(filters.command("upload") & filters.reply)
 async def upload_command(client: Client, message: Message):
@@ -166,13 +227,11 @@ async def upload_command(client: Client, message: Message):
         await message.reply_text("❌ Please reply to a valid file!")
         return
     
-    status_msg = await message.reply_text("🔄 Processing...")
+    status_msg = await message.reply_text("🔄 **Processing Upload**\n\n⏳ Please wait...")
     
     try:
-        # Forward the message to DB channel
         forwarded_msg = await replied_msg.forward(config.DB_CHANNEL_ID)
         
-        # Initialize file data
         file_data = {
             "file_id": None,
             "file_name": "Unknown",
@@ -181,11 +240,10 @@ async def upload_command(client: Client, message: Message):
             "uuid": str(uuid.uuid4()),
             "uploader_id": message.from_user.id,
             "message_id": forwarded_msg.id,
-            "auto_delete": False,
-            "auto_delete_time": None
+            "auto_delete": True,
+            "auto_delete_time": getattr(config, 'DEFAULT_AUTO_DELETE', 30)
         }
 
-        # Check all possible media types
         if replied_msg.document:
             file_data.update({
                 "file_id": replied_msg.document.file_id,
@@ -236,67 +294,39 @@ async def upload_command(client: Client, message: Message):
                 "file_type": "animation"
             })
         else:
-            await status_msg.edit_text("❌ Unsupported file type!")
+            await status_msg.edit_text("❌ **Unsupported file type!**")
             return
 
-        # Check if file_id was set
         if not file_data["file_id"]:
-            await status_msg.edit_text("❌ Could not process file!")
+            await status_msg.edit_text("❌ **Could not process file!**")
             return
 
-        # Check file size
         if file_data["file_size"] and file_data["file_size"] > config.MAX_FILE_SIZE:
-            await status_msg.edit_text(f"❌ File too large! Maximum size: {humanbytes(config.MAX_FILE_SIZE)}")
+            await status_msg.edit_text(f"❌ **File too large!**\nMaximum size: {humanbytes(config.MAX_FILE_SIZE)}")
             return
 
-        # Add file to database
         file_uuid = await db.add_file(file_data)
         share_link = f"https://t.me/{config.BOT_USERNAME}?start={file_uuid}"
-
-        # Set waiting state
-        waiting_for_time[message.from_user.id] = file_uuid
         
-        # Ask for auto-delete time
+        upload_success_text = (
+            f"✅ **File Upload Successful**\n\n"
+            f"📁 **File Name:** `{file_data['file_name']}`\n"
+            f"📊 **Size:** {humanbytes(file_data['file_size'])}\n"
+            f"📎 **Type:** {file_data['file_type']}\n"
+            f"⏱ **Auto-Delete:** {file_data['auto_delete_time']} minutes\n"
+            f"🔗 **Share Link:** `{share_link}`\n\n"
+            f"💡 Use `/auto_del <minutes>` to change auto-delete time"
+        )
+        
         await status_msg.edit_text(
-            f"✅ File uploaded successfully!\n\n"
-            f"📁 File Name: {file_data['file_name']}\n"
-            f"📊 Size: {humanbytes(file_data['file_size'])}\n"
-            f"📎 Type: {file_data['file_type']}\n"
-            f"🔗 Share Link: {share_link}\n\n"
-            "⏱ Reply with number of minutes for auto-delete (or 'no' to skip)",
+            upload_success_text,
             reply_markup=button_manager.file_button(file_uuid)
         )
 
     except Exception as e:
-        await status_msg.edit_text(f"❌ Error: {str(e)}")
-
-@Client.on_message(filters.text & filters.reply)
-async def handle_time_input(client: Client, message: Message):
-    user_id = message.from_user.id
-    
-    # Check if user was waiting for time input
-    if user_id in waiting_for_time:
-        file_uuid = waiting_for_time[user_id]
-        
-        try:
-            if message.text.lower() != 'no':
-                try:
-                    delete_time = int(message.text.strip())
-                    if delete_time > 0:
-                        # Update file with auto-delete settings
-                        await db.set_file_autodelete(file_uuid, delete_time)
-                        await message.reply_text(f"✅ Auto-delete time set to {delete_time} minutes!")
-                    else:
-                        await message.reply_text("❌ Time must be positive!")
-                except ValueError:
-                    await message.reply_text("❌ Invalid time format. Auto-delete not set.")
-            else:
-                await message.reply_text("✅ Auto-delete disabled for this file.")
-                
-            # Clean up
-            del waiting_for_time[user_id]
-            await message.delete()
-            
-        except Exception as e:
-            await message.reply_text(f"❌ Error: {str(e)}")
-            del waiting_for_time[user_id]
+        error_text = (
+            "❌ **Upload Failed**\n\n"
+            f"Error: {str(e)}\n\n"
+            "Please try again or contact support if the issue persists."
+        )
+        await status_msg.edit_text(error_text)
