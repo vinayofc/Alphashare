@@ -10,6 +10,9 @@ import datetime
 db = Database()
 button_manager = ButtonManager()
 
+# Dictionary to store waiting states
+waiting_for_time = {}
+
 @Client.on_message(filters.command("start"))
 async def start_command(client: Client, message: Message):
     await db.add_user(message.from_user.id, message.from_user.username)
@@ -249,65 +252,51 @@ async def upload_command(client: Client, message: Message):
         # Add file to database
         file_uuid = await db.add_file(file_data)
         share_link = f"https://t.me/{config.BOT_USERNAME}?start={file_uuid}"
+
+        # Set waiting state
+        waiting_for_time[message.from_user.id] = file_uuid
         
         # Ask for auto-delete time
-        auto_delete_msg = await message.reply_text(
-            "⏱ Would you like to set an auto-delete time for this file?\n"
-            "Send the time in minutes (e.g., 60 for 1 hour) or 'no' to skip:"
+        await status_msg.edit_text(
+            f"✅ File uploaded successfully!\n\n"
+            f"📁 File Name: {file_data['file_name']}\n"
+            f"📊 Size: {humanbytes(file_data['file_size'])}\n"
+            f"📎 Type: {file_data['file_type']}\n"
+            f"🔗 Share Link: {share_link}\n\n"
+            "⏱ Reply with number of minutes for auto-delete (or 'no' to skip)",
+            reply_markup=button_manager.file_button(file_uuid)
         )
-        
-        try:
-            response = await client.listen(
-                filters.chat(message.chat.id) & 
-                filters.user(message.from_user.id) & 
-                filters.text,
-                timeout=60
-            )
-            
-            if response.text.lower() != 'no':
-                try:
-                    delete_time = int(response.text.strip())
-                    if delete_time > 0:
-                        # Update file with auto-delete settings
-                        await db.set_file_autodelete(file_uuid, delete_time)
-                        await status_msg.edit_text(
-                            f"✅ File uploaded successfully!\n\n"
-                            f"📁 File Name: {file_data['file_name']}\n"
-                            f"📊 Size: {humanbytes(file_data['file_size'])}\n"
-                            f"📎 Type: {file_data['file_type']}\n"
-                            f"⏳ Auto-Delete: {delete_time} minutes\n"
-                            f"🔗 Share Link: {share_link}",
-                            reply_markup=button_manager.file_button(file_uuid)
-                        )
-                    else:
-                        raise ValueError("Time must be positive")
-                except ValueError:
-                    await status_msg.edit_text("❌ Invalid time format. Auto-delete not set.")
-            else:
-                await status_msg.edit_text(
-                    f"✅ File uploaded successfully!\n\n"
-                    f"📁 File Name: {file_data['file_name']}\n"
-                    f"📊 Size: {humanbytes(file_data['file_size'])}\n"
-                    f"📎 Type: {file_data['file_type']}\n"
-                    f"🔗 Share Link: {share_link}",
-                    reply_markup=button_manager.file_button(file_uuid)
-                )
-        except asyncio.TimeoutError:
-            await status_msg.edit_text(
-                f"✅ File uploaded successfully! (Auto-delete not set - timeout)\n\n"
-                f"📁 File Name: {file_data['file_name']}\n"
-                f"📊 Size: {humanbytes(file_data['file_size'])}\n"
-                f"📎 Type: {file_data['file_type']}\n"
-                f"🔗 Share Link: {share_link}",
-                reply_markup=button_manager.file_button(file_uuid)
-            )
-            
+
     except Exception as e:
         await status_msg.edit_text(f"❌ Error: {str(e)}")
 
-    finally:
-        # Clean up auto-delete message
+@Client.on_message(filters.text & filters.reply)
+async def handle_time_input(client: Client, message: Message):
+    user_id = message.from_user.id
+    
+    # Check if user was waiting for time input
+    if user_id in waiting_for_time:
+        file_uuid = waiting_for_time[user_id]
+        
         try:
-            await auto_delete_msg.delete()
-        except:
-            pass
+            if message.text.lower() != 'no':
+                try:
+                    delete_time = int(message.text.strip())
+                    if delete_time > 0:
+                        # Update file with auto-delete settings
+                        await db.set_file_autodelete(file_uuid, delete_time)
+                        await message.reply_text(f"✅ Auto-delete time set to {delete_time} minutes!")
+                    else:
+                        await message.reply_text("❌ Time must be positive!")
+                except ValueError:
+                    await message.reply_text("❌ Invalid time format. Auto-delete not set.")
+            else:
+                await message.reply_text("✅ Auto-delete disabled for this file.")
+                
+            # Clean up
+            del waiting_for_time[user_id]
+            await message.delete()
+            
+        except Exception as e:
+            await message.reply_text(f"❌ Error: {str(e)}")
+            del waiting_for_time[user_id]
