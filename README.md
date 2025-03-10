@@ -189,7 +189,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Credits
 
 - [Pyrogram](https://github.com/pyrogram/pyrogram)
-- [Adarsh](https://github.com/adarsh2626)
+- [Adarsh](https://t.me/adarsh2626)
 - [All Contributors](https://github.com/utkarshdubey2008/AlphaShare/graphs/contributors)
 
 <p align="center">
