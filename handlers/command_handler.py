@@ -5,6 +5,7 @@ from utils import ButtonManager, is_admin, humanbytes
 import config
 import uuid
 import asyncio
+import datetime
 
 db = Database()
 button_manager = ButtonManager()
@@ -36,6 +37,20 @@ async def start_command(client: Client, message: Message):
                 message_id=file_data["message_id"]
             )
             await db.increment_downloads(file_uuid)
+            
+            # Add auto-delete functionality
+            delete_time = file_data.get("auto_delete_time")
+            if delete_time:
+                delete_at = datetime.datetime.now() + datetime.timedelta(minutes=delete_time)
+                await db.set_file_delete_time(file_uuid, delete_at)
+                
+                # Send message with auto-delete info
+                await msg.reply_text(f"🔗 Your file will be deleted in {delete_time} minutes. Save it to your saved messages.")
+                
+                # Schedule deletion
+                await asyncio.sleep(delete_time * 60)
+                await delete_file_and_message(client, file_uuid, message.chat.id, msg.id)
+                
         except Exception as e:
             await message.reply_text(f"❌ Error: {str(e)}")
         return
@@ -47,6 +62,12 @@ async def start_command(client: Client, message: Message):
         ),
         reply_markup=button_manager.start_button()
     )
+
+async def delete_file_and_message(client: Client, file_uuid, chat_id, message_id):
+    # Delete file from database
+    await db.delete_file(file_uuid)
+    # Delete message from chat
+    await client.delete_messages(chat_id, message_id)
 
 @Client.on_message(filters.command("help"))
 async def help_command(client: Client, message: Message):
@@ -224,5 +245,33 @@ async def upload_command(client: Client, message: Message):
             f"🔗 Share Link: {share_link}",
             reply_markup=button_manager.file_button(file_data['uuid'])
         )
+        
+        # Ask for auto-delete time
+        await status_msg.reply_text("✅ File uploaded successfully! Please specify auto-delete time in minutes:")
+        
+        # Wait for admin's response
+        response = await client.listen(filters.user(message.from_user.id) & filters.text, timeout=300)
+        if response:
+            try:
+                delete_time = int(response.text.strip())
+                delete_at = datetime.datetime.now() + datetime.timedelta(minutes=delete_time)
+                await db.set_file_delete_time(file_data['uuid'], delete_at)
+                
+                # Send success message with auto-delete info
+                await status_msg.edit_text(
+                    f"✅ File uploaded successfully!\n\n"
+                    f"📁 File Name: {file_data['file_name']}\n"
+                    f"📊 Size: {humanbytes(file_data['file_size'])}\n"
+                    f"📎 Type: {file_data['file_type']}\n"
+                    f"🔗 Share Link: {share_link}\n"
+                    f"🕒 This file will be deleted in {delete_time} minutes.",
+                    reply_markup=button_manager.file_button(file_data['uuid'])
+                )
+                
+            except ValueError:
+                await status_msg.edit_text("❌ Invalid time format. Please provide time in minutes.")
+        else:
+            await status_msg.edit_text("❌ No response received. Auto-delete not set.")
+
     except Exception as e:
         await status_msg.edit_text(f"❌ Error: {str(e)}")
