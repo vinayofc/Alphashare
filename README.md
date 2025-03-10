@@ -40,6 +40,11 @@
 - **Advanced Statistics**: Track downloads, monitor storage usage, and view user engagement metrics.
 - **Professional UI**: Clean formatting, interactive inline buttons, and real-time progress bars.
 - **Security Features**: Admin verification, download monitoring, and file access control.
+- **Auto Delete Feature**: Helps prevent copyright issues!
+  - **Command**: /auto_del
+  - **Usage**: /auto_del 2 → Sets auto-delete timer to 2 minutes.
+- **Cleaner UI**: Smoother and more user-friendly experience.
+- **Bot Keep-Alive Mechanism**: Ensures 24/7 uptime for a seamless experience on Koyeb.
 
 ## 🛠️ Installation
 
@@ -66,15 +71,11 @@ pip install -r requirements.txt
 python main.py
 ```
 
-
-
 ### Heroku Deployment
 
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/utkarshdubey2008/AlphaShare)
 
 [![Watch Deployment Tutorial](https://img.shields.io/badge/Watch%20Tutorial-YouTube-red?logo=youtube)](https://youtu.be/8d9XsFhWj5s?si=02OPS6p_h6pov5HW)
-
-...
 
 ### Koyeb Deployment
 
@@ -82,9 +83,6 @@ python main.py
 
 [![Watch Deployment Tutorial](https://img.shields.io/badge/Watch%20Tutorial-YouTube-red?logo=youtube)](https://youtu.be/2EKt3nVcY6E?si=NKMlRw3qx6eaWjNU)
 
-### Required Variables
-
-...
 ### Required Variables
 
 ```
@@ -114,6 +112,7 @@ ADMIN_IDS - List of admin user IDs
 /broadcast - Send message to all users
 /delete - Delete a file
 /fileinfo - Get file information
+/auto_del - Set auto-delete timer
 ```
 
 ## Supported Types, Extensions, and MIME Types
@@ -194,7 +193,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [All Contributors](https://github.com/utkarshdubey2008/AlphaShare/graphs/contributors)
 
 <p align="center">
-  <b>Last Updated: 9-04-2025 07:56:10 IST</b>
+  <b>Last Updated: 2025-03-10 19:04:48 UTC</b>
   <br>
   <i>Made with ❤️ by <a href="https://t.me/adarsh2626">Adarsh</a></i>
 </p>
