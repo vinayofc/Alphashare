@@ -21,7 +21,7 @@ FORCE_SUB_CHANNEL = int(os.getenv("FORCE_SUB_CHANNEL"))
 # Bot Information
 BOT_USERNAME = os.getenv("BOT_USERNAME")
 BOT_NAME = os.getenv("BOT_NAME")
-BOT_VERSION = "1.1"
+BOT_VERSION = "1.2"
 
 # Links
 CHANNEL_LINK = os.getenv("CHANNEL_LINK")
