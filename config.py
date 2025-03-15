@@ -104,6 +104,7 @@ Hello {user_mention}! I'm your secure file sharing assistant.
 
 📢 Join @Thealphabotz for updates!
 👨‍💻 Contact @adarsh2626 for support
+A Open Source Repo :- github.com/utkarshdubey2008/alphashare
 
 Use /help to see available commands!
 """
@@ -132,6 +133,8 @@ Use /auto_del to change the deletion time.
 • Archives (ZIP, RAR, 7Z, etc.)
 • Applications (APK, EXE, etc.)
 • Other Formats
+
+An Open Source Repo :- github.com/utkarshdubey2008/alphashare
 
 ⚠️ For support: @adarsh2626
 """
