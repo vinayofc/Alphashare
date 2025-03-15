@@ -1,6 +1,7 @@
 #AlphaShare bot join @Thealphabotz
 from pyrogram import Client, idle
 from flask import Flask, jsonify
+from keepalive import ping_server
 from database import Database
 import config
 import asyncio
@@ -33,6 +34,9 @@ class FileShareBot(Client):
         print(f"Bot Started as {me.first_name}")
         print(f"Username: @{me.username}")
         print("----------------")
+
+        if config.PING_MODE:
+            await ping_server(config.PING_URL, config.PING_TIME)
 
     async def stop(self):
         await super().stop()
